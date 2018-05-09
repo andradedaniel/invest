@@ -7,5 +7,13 @@
 @stop
 
 @section('content')
-    {!! $crawler !!}
+Data/Hora 	Cotação 	Mínima 	Máxima 	Variação 	Variação (%) 	Volume
+    @foreach ($pricesHistory as $priceHistory)
+        <p>{{ $priceHistory['date'] }} - 
+           {{ $priceHistory['closed'] }} - 
+           {{ $priceHistory['min'] }} - 
+           {{ $priceHistory['max'] }} - 
+           {{ $priceHistory['var'] }} - 
+           {{ $priceHistory['varPercent'] }}</p>
+    @endforeach
 @stop

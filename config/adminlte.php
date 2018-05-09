@@ -115,9 +115,9 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text' => 'Scrap',
-            'url'  => 'scrap',
-            'icon' => 'file',
+            'text' => 'Ações',
+            'url'  => 'stock',
+            'icon' => 'list-alt',
         ],
         [
             'text'        => 'Pages',
