@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Stock;
+use App\HistoryStock;
 use Goutte\Client;
 use Symfony\Component\DomCrawler\Crawler;
-use App\HistoryStock;
 
 class StockController extends Controller
 {
@@ -20,21 +20,28 @@ class StockController extends Controller
 
     public function show($ticker)
     {
-        echo 'estou na pagina de show ==>'.$ticker;
+        $stockHistory = Stock::where('ticker',$ticker)->first()->history()->orderBy('date','desc')->paginate(30);
+        // codigo para funcionar a var $loop->iteration mesmo com paginaçao. Copiado da internet
+        $skipped = ($stockHistory->currentPage() * $stockHistory->perPage()) - $stockHistory->perPage();
+        $period['begin']=0;
+        $period['end']=$stockHistory->first()->date;
+        //dd($stockHistory);
+        // dd($date);
+        return view('stock-history')->with(compact('ticker','stockHistory','skipped','period'));
     }
 
     public function updateHistory(Request $request,$ticker)
     {
-        //dd($id);
-        //dd($request->all());
+        dd($ticker);
+        dd($request->all());
         $stock_id = Stock::where('ticker',$ticker)->pluck('id')->get(0);
-        $begin_date['day'] = 1;
-        $begin_date['month'] = 1;
-        $begin_date['year'] = 2018;
-        $end_date['day'] = 30;
-        $end_date['month'] = 4;
-        $end_date['year'] = 2018;
-        $pricesHistory = $this->scrapUol($ticker,$begin_date,$end_date);
+        $beginDate['day'] = 1;
+        $beginDate['month'] = 1;
+        $beginDate['year'] = 2018;
+        $endDate['day'] = 30;
+        $endDate['month'] = 4;
+        $endDate['year'] = 2018;
+        $pricesHistory = $this->scrapUol($ticker,$beginDate,$endDate);
         
         foreach ($pricesHistory as $priceHistory){
             //implementar try catch
@@ -53,17 +60,17 @@ class StockController extends Controller
 
     // Faz scrap no site da UOL
     // TODO: implementar try catch
-    public function scrapUol($ticker,$begin_date,$end_date)
+    public function scrapUol($ticker,$beginDate,$endDate)
     {
         $client = new Client();
         $url = 'http://cotacoes.economia.uol.com.br/acao/cotacoes-historicas.html?'.
                     'codigo='.$ticker.'.SA'.
-                    '&beginDay='.$begin_date['day'].
-                    '&beginMonth='.$begin_date['month'].
-                    '&beginYear='.$begin_date['year'].
-                    '&endDay='.$end_date['day'].
-                    '&endMonth='.$end_date['month'].
-                    '&endYear='.$end_date['year'].
+                    '&beginDay='.$beginDate['day'].
+                    '&beginMonth='.$beginDate['month'].
+                    '&beginYear='.$beginDate['year'].
+                    '&endDay='.$endDate['day'].
+                    '&endMonth='.$endDate['month'].
+                    '&endYear='.$endDate['year'].
                     '&size=10000&page=1';
         $html = $client->request('GET', $url);
         $htmlTable = $html->filter("table[class='tblCotacoes'] tbody")->html();
@@ -81,15 +88,16 @@ class StockController extends Controller
 
     public function extractPriceHistory($text)
     {
+        
         $priceHistory = [];
-        $parts =  explode(' ',$text);
-            $priceHistory['date'] = Carbon::createFromFormat('d/m/Y',$parts[0])->toDateString();
-            $priceHistory['closed'] = str_replace(',','.',$parts[1]);
-            $priceHistory['min'] = str_replace(',','.',$parts[2]);
-            $priceHistory['max'] = str_replace(',','.',$parts[3]);
-            $priceHistory['var'] = str_replace(',','.',$parts[4]);
-            $priceHistory['varPercent'] = str_replace(',','.',$parts[5]);
-            //$priceHistory['volume'] = $parts[6];
+        $parts =  explode(' ',trim($text));
+        $priceHistory['date'] = Carbon::createFromFormat('d/m/Y',$parts[0])->toDateString();
+        $priceHistory['closed'] = str_replace(',','.',$parts[1]);
+        $priceHistory['min'] = str_replace(',','.',$parts[2]);
+        $priceHistory['max'] = str_replace(',','.',$parts[3]);
+        $priceHistory['var'] = str_replace(',','.',$parts[4]);
+        $priceHistory['varPercent'] = str_replace(',','.',$parts[5]);
+        //$priceHistory['volume'] = $parts[6];
         return $priceHistory;
     }
 

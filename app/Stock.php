@@ -10,8 +10,8 @@ class Stock extends Model
         'ticker', 'name', 'inicial_history','last_history_update',
     ];
 
-    public function historyStocks()
+    public function history()
     {
-        return $this->hasMany('App\HistoryStock');
+        return $this->hasMany(HistoryStock::class);
     }
 }

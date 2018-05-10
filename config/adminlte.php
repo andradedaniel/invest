@@ -116,7 +116,7 @@ return [
         ],
         [
             'text' => 'Ações',
-            'url'  => 'stock',
+            'url'  => 'acao',
             'icon' => 'list-alt',
         ],
         [

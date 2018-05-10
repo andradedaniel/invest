@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 //Route::get('/scrap', 'HomeController@scrap')->name('scrap');
-Route::get('/stock', 'StockController@index')->name('stock.index');
-Route::get('/stock/{ticker}', 'StockController@show')->name('stock.show');
-Route::get('/stock/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
+Route::get('/acao', 'StockController@index')->name('stock.index');
+Route::get('/acao/{ticker}', 'StockController@show')->name('stock.show');
+Route::get('/acao/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
+Route::post('/acao/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');

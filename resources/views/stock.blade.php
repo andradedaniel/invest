@@ -11,7 +11,7 @@
 <p>Quantidade de ações disponíveis: {{ $stocksCount }}</p>
 
 <div class="box-header">
-    <h3 class="box-title"></h3>
+    <h3 class="box-title">Ações disponíveis</h3>
 </div>
 <!-- /.box-header -->
 <div class="box-body no-padding">
@@ -30,7 +30,7 @@
                     <td>{{ $stock->ticker }}</td>
                     <td>{{ $stock->inicial_history }}</td>
                     <td>{{ $stock->last_history_update }}</td>
-                    <td><a href="" style="padding-left: 9px;"><i class="fa fa-search"></i></a>
+                    <td><a href="{!! route('stock.show',['ticker'=>$stock->ticker]) !!}" style="padding-left: 9px;"><i class="fa fa-search"></i></a>
                         <a href="{!! route('stock.updateHistory',['ticker'=>$stock->ticker]) !!}" style="padding-left: 9px;"><i class="fa fa-refresh"></i>
                         <a href="" style="padding-left: 9px;"><i class="fa fa-times"></i></a>
                     </td>
