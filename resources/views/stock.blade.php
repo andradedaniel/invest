@@ -18,9 +18,9 @@
     <table class="table table-condensed">
         <tbody>
             <tr>
-                <th style="width: 10px">#</th>
+                <th style="width: 20px">#</th>
                 <th>Código</th>
-                <th>Histórico desde</th>
+                <th>Histórico de Cotações</th>
                 <th>Última Atualização</th>
                 <th style="width: 80px">Menu</th>
             </tr>
@@ -28,11 +28,11 @@
                 <tr>    
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $stock->ticker }}</td>
-                    <td>{{ $stock->inicial_history }}</td>
-                    <td>{{ $stock->last_history_update }}</td>
+                    <td>{{ $stock->first_history }} - {{ $stock->last_history }}</td>
+                    <td>{{ $stock->updated_at }}</td>
                     <td><a href="{!! route('stock.show',['ticker'=>$stock->ticker]) !!}" style="padding-left: 9px;"><i class="fa fa-search"></i></a>
-                        <a href="{!! route('stock.updateHistory',['ticker'=>$stock->ticker]) !!}" style="padding-left: 9px;"><i class="fa fa-refresh"></i>
-                        <a href="" style="padding-left: 9px;"><i class="fa fa-times"></i></a>
+                        <a id="deleteHistory" title="Excluir historico de cotação"
+                            onclick="alert('Funcionalidade ainda nao implementada!!');" href="" style="padding-left: 9px;"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
             @endforeach
@@ -40,4 +40,12 @@
     </table>
 </div>
 <!-- /.box-body -->
+@stop
+
+@section('js')
+<script type="text/javascript">
+    $(document).ready(function() {
+        //alert("Settings page was loaded");
+    });
+</script>
 @stop

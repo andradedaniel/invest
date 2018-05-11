@@ -12,14 +12,17 @@
 */
 
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('dashboard');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-//Route::get('/scrap', 'HomeController@scrap')->name('scrap');
-Route::get('/acao', 'StockController@index')->name('stock.index');
-Route::get('/acao/{ticker}', 'StockController@show')->name('stock.show');
-Route::get('/acao/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
-Route::post('/acao/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
+Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+
+Route::prefix('admin/acoes')->group(function () { 
+    Route::get('/', 'StockController@index')->name('stock.index');
+    Route::get('/historico-cotacoes', 'StockController@index')->name('stock.index');
+    Route::get('/historico-cotacoes/{ticker}', 'StockController@show')->name('stock.show');
+    Route::get('/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
+    Route::post('/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
+});

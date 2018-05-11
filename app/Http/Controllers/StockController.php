@@ -21,39 +21,59 @@ class StockController extends Controller
     public function show($ticker)
     {
         $stockHistory = Stock::where('ticker',$ticker)->first()->history()->orderBy('date','desc')->paginate(30);
+        if ($stockHistory->isEmpty())
+            return view('stock-history')->with('message','nao encontrado')->with(compact('ticker'));
         // codigo para funcionar a var $loop->iteration mesmo com paginaçao. Copiado da internet
         $skipped = ($stockHistory->currentPage() * $stockHistory->perPage()) - $stockHistory->perPage();
-        $period['begin']=0;
-        $period['end']=$stockHistory->first()->date;
-        //dd($stockHistory);
-        // dd($date);
+        //$period['begin']=0;
+        // $period['end']=$stockHistory->first()->date;
+        
         return view('stock-history')->with(compact('ticker','stockHistory','skipped','period'));
     }
 
     public function updateHistory(Request $request,$ticker)
     {
-        dd($ticker);
-        dd($request->all());
-        $stock_id = Stock::where('ticker',$ticker)->pluck('id')->get(0);
-        $beginDate['day'] = 1;
-        $beginDate['month'] = 1;
-        $beginDate['year'] = 2018;
-        $endDate['day'] = 30;
-        $endDate['month'] = 4;
-        $endDate['year'] = 2018;
+        //TODO: verificar se a data de inicio é posterior a data atual e limitar uma data limite de inicio. 
+        $beginDate = $request->beginDate;
+        $endDate = date('d/m/Y'); //data final é sempre a data atual
+        
+        //recupera o id a partir do ticker - necessario para criar o historico
+        $stock = Stock::where('ticker',$ticker)->first();
+        
+        if (! $stock) //se nao existe eh pq o ticker eh invalido 
+            return 'Codigo '.$ticker.' não encontrato na base de dados'; 
+
+        //chama o metodo que faz o scrap na pagina do UOL passando as datas de inicio e fim (d/m/Y)      
         $pricesHistory = $this->scrapUol($ticker,$beginDate,$endDate);
         
-        foreach ($pricesHistory as $priceHistory){
-            //implementar try catch
-            HistoryStock::firstOrCreate(['stock_id'=>$stock_id,
-                                  'date'=>$priceHistory['date'],
-                                  'closed'=>$priceHistory['closed'],
-                                  'min'=>$priceHistory['min'],
-                                  'max'=>$priceHistory['max'],
-                                  'var'=>$priceHistory['var'],
-                                  'var_percent'=>$priceHistory['varPercent'],
-                                ]);
-        }
+        //abre uma transaçao para inserir os dados
+        //TODO: passar interaçao com banco para dentro da MODEL
+        \DB::transaction(function () use ($pricesHistory,$stock){
+            foreach ($pricesHistory as $priceHistory){
+                try { 
+                    HistoryStock::firstOrCreate(['stock_id'=>$stock->id, 
+                                        'date'=>$priceHistory['date'],
+                                        'closed'=>$priceHistory['closed'],
+                                        'min'=>$priceHistory['min'],
+                                        'max'=>$priceHistory['max'],
+                                        'var'=>$priceHistory['var'],
+                                        'var_percent'=>$priceHistory['varPercent'],
+                                        ]);
+                }
+                catch (\Exception $e) {
+                    dd($e->getMessage());
+                }
+            }
+            
+            //buscar a data de inicio e fim do historico de cotação
+            $firstHistory = HistoryStock::where('stock_id',$stock->id)->orderBy('date','asc')->limit(1)->pluck('date')->get(0);
+            $lastHistory = HistoryStock::where('stock_id',$stock->id)->orderBy('date','desc')->limit(1)->pluck('date')->get(0);
+            
+            //atualizar essas datas na tabela stock
+            $stock->first_history = $firstHistory;
+            $stock->last_history = $lastHistory;
+            $stock->save();
+        });
         return redirect()->route('stock.show',['ticker'=>$ticker]);
 
     }
@@ -63,14 +83,25 @@ class StockController extends Controller
     public function scrapUol($ticker,$beginDate,$endDate)
     {
         $client = new Client();
+        //faz o parse das datas para o formato esperado pela URL
+        // TODO: verificar se a data recebida está no padrao d/m/Y - se nao irá dar erro ao formar a URL (fazer com request!! ver exemplo no mybudget)
+        $parts = explode('/',$beginDate);
+        $begin['day'] = $parts[0];
+        $begin['month'] = $parts[1];
+        $begin['year'] = $parts[2];
+        $parts = explode('/',$endDate);
+        $end['day'] = $parts[0];
+        $end['month'] = $parts[1];
+        $end['year'] = $parts[2];
+        
         $url = 'http://cotacoes.economia.uol.com.br/acao/cotacoes-historicas.html?'.
                     'codigo='.$ticker.'.SA'.
-                    '&beginDay='.$beginDate['day'].
-                    '&beginMonth='.$beginDate['month'].
-                    '&beginYear='.$beginDate['year'].
-                    '&endDay='.$endDate['day'].
-                    '&endMonth='.$endDate['month'].
-                    '&endYear='.$endDate['year'].
+                    '&beginDay='.$begin['day'].
+                    '&beginMonth='.$begin['month'].
+                    '&beginYear='.$begin['year'].
+                    '&endDay='.$end['day'].
+                    '&endMonth='.$end['month'].
+                    '&endYear='.$end['year'].
                     '&size=10000&page=1';
         $html = $client->request('GET', $url);
         $htmlTable = $html->filter("table[class='tblCotacoes'] tbody")->html();
@@ -78,20 +109,19 @@ class StockController extends Controller
         $crawler = new Crawler($htmlTable);
         
         $pricesHistory = $crawler->filter("tr")->each(function ($node){
-            return $this->extractPriceHistory($node->text());
+            return $this->extractPriceHistory($node->text()); 
             //var_dump($priceHistory);
         });
-        //var_dump($priceHistory);
-        //return view('scrap')->with('pricesHistory',$pricesHistory);
+        //retorna um array com uma linha da tabela em cada posição do array
         return $pricesHistory; 
     }
 
+    //metodo para transformar em array a string obtida pelo scraping
     public function extractPriceHistory($text)
     {
-        
         $priceHistory = [];
         $parts =  explode(' ',trim($text));
-        $priceHistory['date'] = Carbon::createFromFormat('d/m/Y',$parts[0])->toDateString();
+        $priceHistory['date'] = Carbon::createFromFormat('d/m/Y',$parts[0])->toDateString(); //formata para Y-m-d
         $priceHistory['closed'] = str_replace(',','.',$parts[1]);
         $priceHistory['min'] = str_replace(',','.',$parts[2]);
         $priceHistory['max'] = str_replace(',','.',$parts[3]);

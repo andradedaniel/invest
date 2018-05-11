@@ -17,8 +17,8 @@ class CreateStocksTable extends Migration
             $table->increments('id');
             $table->string('ticker',8)->unique();
             $table->string('name',100)->nullable();
-            $table->date('inicial_history')->nullable();
-            $table->date('last_history_update')->nullable();
+            $table->date('first_history')->nullable();
+            $table->date('last_history')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

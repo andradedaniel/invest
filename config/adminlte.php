@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
 
     'logout_url' => 'logout',
 
@@ -108,7 +108,28 @@ return [
     */
 
     'menu' => [
-        'MAIN NAVIGATION',
+        'MINHA CARTEIRA',
+        [
+            'text' => 'Dashboard',
+            'url'  => 'dashboard',
+            'icon' => 'dashboard',
+        ],
+        [
+            'text' => 'Ações',
+            'url'  => '',
+            'icon' => 'list-alt',
+        ],
+        [
+            'text' => 'FII\'s',
+            'url'  => '',
+            'icon' => 'building',
+        ],
+        [
+            'text'        => 'Renda Fixa',
+            'url'         => '',
+            'icon'        => 'piggy-bank',
+        ],
+        'MANUTENÇÃO DO SISTEMA',
         [
             'text' => 'Blog',
             'url'  => 'admin/blog',
@@ -116,15 +137,19 @@ return [
         ],
         [
             'text' => 'Ações',
-            'url'  => 'acao',
             'icon' => 'list-alt',
-        ],
-        [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'submenu' => [
+                [
+                    'text' => 'Lista de Ações',
+                    'url'  => 'admin/acoes',
+                    'icon' => 'angle-right',
+                ],
+                [
+                    'text' => 'Historico de Cotações',
+                    'url'  => 'admin/acoes/historico-cotacoes',
+                    'icon' => 'angle-right',
+                ],
+            ]
         ],
         'ACCOUNT SETTINGS',
         [
@@ -136,6 +161,13 @@ return [
             'text' => 'Change Password',
             'url'  => 'admin/settings',
             'icon' => 'lock',
+        ],
+        [
+            'text'        => 'Pages',
+            'url'         => 'admin/pages',
+            'icon'        => 'file',
+            'label'       => 4,
+            'label_color' => 'success',
         ],
         [
             'text'    => 'Multilevel',
