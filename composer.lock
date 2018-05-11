@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "92e82c1785cb1c85a60b24a9bd222935",
+    "content-hash": "578df9e7906158608d026e41d91ba34c",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1173,58 +1173,6 @@
                 "psr-3"
             ],
             "time": "2017-06-19T01:22:40+00:00"
-        },
-        {
-            "name": "murilobd/google-finance-stocks",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/murilobd/google-finance-stocks.git",
-                "reference": "77ec88399795abf5536b1e4d2ee26b42f501ce1c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/murilobd/google-finance-stocks/zipball/77ec88399795abf5536b1e4d2ee26b42f501ce1c",
-                "reference": "77ec88399795abf5536b1e4d2ee26b42f501ce1c",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.2"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Murilobd\\GoogleFinanceStocks\\GoogleFinanceStocksServiceProvider"
-                    ],
-                    "aliases": {
-                        "GoogleFinanceStocks": "Murilobd\\GoogleFinanceStocks\\Facade\\GoogleFinanceStocks"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Murilobd\\GoogleFinanceStocks\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Murilo Boareto Delefrate",
-                    "email": "murilo@murilobd.com"
-                }
-            ],
-            "description": "This package will get from Google Finance all infos from a given stock (ex: BVMF:PETR4)",
-            "keywords": [
-                "bolsa de valor",
-                "finance",
-                "google",
-                "stocks"
-            ],
-            "time": "2018-02-05T20:10:38+00:00"
         },
         {
             "name": "nesbot/carbon",

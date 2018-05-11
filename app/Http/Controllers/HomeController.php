@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// use Murilobd\GoogleFinanceStocks\Facade\GoogleFinanceStocks;
-// use Murilobd\GoogleFinanceStocks\GoogleFinanceStocksException;
 // use Goutte\Client;
 use GuzzleHttp\Client;
 
@@ -27,8 +25,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return view('home');
+        
 		$stock = 'PETR4';
-		$timeframe = 600;
+		$timeframe = 120;
 		$periodo='1d';
 		$url = 'http://finance.google.com/finance/getprices?q='.$stock.'&x=BVMF&p='.$periodo.'&i='.$timeframe.'&f=d,c,o,h,l,v';
 		$client = new Client();
@@ -71,20 +71,6 @@ class HomeController extends Controller
 
 		}
 		echo "</table>";
-
-
-		// dd($timestamp);
-		
-		// $content[7]=str_replace($timestamp,date("d.m.Y - H:i:s", $timestamp),$content[7]);
-// 		$date = date("d M Y H:i:s");
-// // output
-// echo strtotime($date);
-		dd();
-        // dd($stock);
-        echo $stock->symbol;
-        echo $stock->name;
-        echo $stock->low;
-        // return view('home');
     }
 
 

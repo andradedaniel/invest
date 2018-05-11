@@ -48,4 +48,5 @@
         //alert("Settings page was loaded");
     });
 </script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
 @stop
