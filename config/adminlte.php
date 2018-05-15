@@ -116,7 +116,7 @@ return [
         ],
         [
             'text' => 'Ações',
-            'url'  => '',
+            'url'  => 'acoes',
             'icon' => 'list-alt',
         ],
         [
@@ -136,20 +136,14 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text' => 'Ações',
+            'text' => 'Lista de Ações',
+            'url'  => 'admin/acoes',
             'icon' => 'list-alt',
-            'submenu' => [
-                [
-                    'text' => 'Lista de Ações',
-                    'url'  => 'admin/acoes',
-                    'icon' => 'angle-right',
-                ],
-                [
-                    'text' => 'Historico de Cotações',
-                    'url'  => 'admin/acoes/historico-cotacoes',
-                    'icon' => 'angle-right',
-                ],
-            ]
+        ],
+        [
+            'text' => 'Lista de FII\'s',
+            'url'  => '',
+            'icon' => 'building',
         ],
         'ACCOUNT SETTINGS',
         [
@@ -256,6 +250,6 @@ return [
     'plugins' => [
         'datatables' => true,
         'select2'    => true,
-        'chartjs'    => true,
+        'chartjs'    => false,
     ],
 ];
