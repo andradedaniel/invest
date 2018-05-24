@@ -24,6 +24,20 @@ class StockHistoryController extends Controller
         return view('stock-history')->with(compact('ticker','stockHistory','skipped','period'));
     }
 
+
+    public function updateEmMassa($beginDate, $ticker)
+    {
+        //$beginDate = $request->beginDate;
+        
+        $response = array(
+            'status' => 'success',
+            'msg' => $ticker.' Setting created successfully '.$beginDate,
+        );
+        return \Response::json($response);
+   
+    }
+
+
     public function update(Request $request,$ticker)
     {
         //TODO: verificar se a data de inicio é posterior a data atual e limitar uma data limite de inicio. 

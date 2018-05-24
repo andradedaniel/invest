@@ -23,7 +23,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    {!!Form::text('beginDate',null,['class'=>'form-control','data-inputmask'=>"'alias': 'dd/mm/yyyy'",'data-mask'=>''])!!}
+                                    {!!Form::text('beginDate',null,['class'=>'form-control', 'data-inputmask-alias'=>'datetime'])!!}
                                     <span class="input-group-btn">
                                             {!! Form::button('<i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Importar',['type' => 'submit','class' => 'btn btn-primary']) !!}
                                     </span>
@@ -40,13 +40,13 @@
         <!-- /.row -->
     {!! Form::close() !!}
 
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="chart_container" style="width:100%; height:400px;"></div>
-        </div>
-    </div>
 
     @if (isset($stockHistory) && $stockHistory != NULL)
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="chart_container" style="width:100%; height:400px;"></div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
@@ -114,7 +114,7 @@
     <script src="{{ asset('js/inputmask/inputmask.min.js') }}"></script>
     <script src="{{ asset('js/inputmask/inputmask.date.extensions.min.js') }}"></script>
     <script src="{{ asset('js/inputmask/inputmask.extensions.min.js') }}"></script>
-    <script src="{{ asset('js/jquery.inputmask.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/inputmask/jquery.inputmask.min.js') }}"></script>
     <script src="{{ asset('js/inputmask/bindings/inputmask.binding.min.js') }}"></script>
     <!-- HighCharts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
