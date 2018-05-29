@@ -30,6 +30,8 @@ Route::prefix('admin/acoes')->group(function () {
     Route::post('/atualizar-historico/{ticker}', 'StockHistoryController@atualizar')->name('stock-history.update');
     Route::post('/atualizar-historico-em-massa/', 'StockHistoryController@atualizarEmMassa')->name('stock-history.updateEmMassa');
 
+    Route::get('/teste', 'StockHistoryController@teste')->name('stock-history.teste');
+
     Route::get('/historico-cotacao/{acao}','GraficoController@historicoCotacao')->name('grafico.historico-cotacao');
 });
 

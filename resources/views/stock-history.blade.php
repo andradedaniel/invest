@@ -23,7 +23,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    {!!Form::text('beginDate',null,['class'=>'form-control', 'data-inputmask-alias'=>'datetime'])!!}
+                                    {!!Form::text('beginDate',null,['class'=>'form-control', ])!!}
                                     <span class="input-group-btn">
                                             {!! Form::button('<i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Importar',['type' => 'submit','class' => 'btn btn-primary']) !!}
                                     </span>

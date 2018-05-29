@@ -11,6 +11,38 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class StockHistoryController extends Controller
 {
+
+    public function teste()
+    {
+        $client = new Client();
+        $text = '';
+        for ($i=1;$i<=33;$i++)
+        {
+            $url = 'http://www.guiainvest.com.br/lista-acoes/default.aspx?listaacaopage='.$i;
+            $html = $client->request('GET', $url);
+            $htmlTable = $html->filter("table[class='rgMasterTable'] tbody")->html();
+            $htmlTable = preg_replace('/(\v|\s)+/', ' ', $htmlTable);
+            
+            $crawler = new Crawler($htmlTable);
+            
+            $table = $crawler->filter('tr')->each(function ($tr, $i) {
+                return $tr->filter('td')->each(function ($td, $i) {
+                    return trim($td->text());
+                });
+            });
+            // $text = "array(\n";
+            foreach ($table as $row)
+            {
+                $text .= "<br>array('ticker'=>'".$row[1]."','name'=>'".$row[0]."','main_activity'=>'".$row[2]."'),";
+            }
+            sleep(1);
+        }
+        // $text .= "<br>);";
+        var_dump($text);
+        die();
+    }
+
+
     public function show($ticker)
     {
         $stockHistory = Stock::where('ticker',$ticker)->first()->history()->orderBy('date','desc')->paginate(30);
@@ -28,22 +60,35 @@ class StockHistoryController extends Controller
     public function atualizarEmMassa(Request $request)
     {
         //$beginDate = $request->beginDate;
-        
-        $response = array(
-            'status' => 'success',
-            'msg' => $request->ticker.' Setting created successfully '.$request->beginDate,
-        );
+        usleep(500000);
+        if ($this->update($request->beginDate,$request->ticker))
+        {
+            $response = array(
+                'status' => 'success',
+                'msg' => 'Data Inicio: '.$request->beginDate. ' - Cotaçoes de '.$request->ticker.' importado com sucesso.',
+            );
+        }
+        else 
+        {
+            $response = array(
+                'status' => 'error',
+                'msg' => 'ERRO ao importar cotaçoes de '.$request->ticker.'.',
+            );
+        }
         return \Response::json($response);
-   
     }
 
     public function atualizar(Request $request,$ticker)
+    {
+        $this->update($request->beginDate,$ticker);
+        return redirect()->route('stock-history.show',['ticker'=>$ticker]); 
+    }
 
 
-    public function update(Request $request,$ticker)
+    public function update($beginDate,$ticker)
     {
         //TODO: verificar se a data de inicio é posterior a data atual e limitar uma data limite de inicio. 
-        $beginDate = $request->beginDate;
+        // = $request->beginDate;
         $endDate = date('d/m/Y'); //data final é sempre a data atual
         
         //recupera o id a partir do ticker - necessario para criar o historico
@@ -83,7 +128,7 @@ class StockHistoryController extends Controller
             $stock->last_history = $lastHistory;
             $stock->save();
         });
-        return redirect()->route('stock-history.show',['ticker'=>$ticker]);
+        return true;
 
     }
 

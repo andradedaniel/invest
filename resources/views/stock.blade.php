@@ -43,6 +43,9 @@
                 </div>
                 <!-- /.form group --> 
             </div>
+            <div class="progress" style="display: none;">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
             {{-- <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
@@ -60,10 +63,10 @@
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title" style="font-size:14px">Esta ação possui dados históricos disponíveis apenas a partir de xx/01/2018</h3>
+                <h3></h3>
                 <div class="box-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                        <input name="table_search" class="form-control pull-right" placeholder="Search" type="text">
+                    <div class="input-group input-group-sm" style="width: 200px;">
+                        <input name="table_search" class="form-control pull-right" placeholder="CÓDIGO" type="text">
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                         </div>
@@ -90,10 +93,10 @@
                                 <td>{{ $stock->first_history }} - {{ $stock->last_history }}</td>
                                 <td>{{ $stock->updated_at }}</td>
                                 <td>
-                                    <a id="deleteHistory" title="Excluir historico de cotação"
+                                    <a id="deleteHistory" title="Editar ativo"
                                         onclick="alert('Funcionalidade ainda nao implementada!!');" href="" style="padding-left: 9px;"><i class="fa fa-edit"></i></a>
-                                    <a href="{!! route('stock-history.show',['ticker'=>$stock->ticker]) !!}" style="padding-left: 9px;"><i class="fa fa-refresh"></i></a>
-                                    <a id="deleteHistory" title="Excluir historico de cotação"
+                                    <a href="{!! route('stock-history.show',['ticker'=>$stock->ticker]) !!}" title="Importar histórico de cotações" style="padding-left: 9px;"><i class="fa fa-refresh"></i></a>
+                                    <a id="deleteHistory" title="Excluir ativo"
                                         onclick="alert('Funcionalidade ainda nao implementada!!');" href="" style="padding-left: 9px;"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
@@ -137,20 +140,30 @@
                 var selected_tickers = $('input[name="ticker"]:checked').map(function() {
                                             return this.value;
                                         }).get();
-
-                selected_tickers.forEach(function(valor, chave){
-                    console.log(chave, valor);
+                // TODO: verificar se algum ticker foi selecionado
+                $(".progress").show();
+                var delay = 0;
+                selected_tickers.forEach(function(valor, indice){
+                    // console.log(percent, valor);
+                    // setTimeout(function(){
+                        var percent = ((indice+1)/selected_tickers.length)*100;
+                       $(".progress-bar").css("width", percent + "%").text(indice+1 + " / " + selected_tickers.length);
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            url: "{{ route('stock-history.updateEmMassa') }}",
+                            data: {_token:_token, beginDate: beginDate, ticker: valor},
+                            success: function( retorno ) {
+                                console.log(retorno.msg);
+                            }
+                        });
+                    // },delay++*500);    
                 });
-
-                var ticker = 'VULC3'
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('stock-history.updateEmMassa') }}",
-                    data: {_token:_token, beginDate: beginDate, ticker: ticker},
-                    success: function( msg ) {
-                        console.log(msg);
-                    }
-                });
+                $('#modal-date-updateall').modal('toggle');
+                alert('Histórico de Cotações importadas com sucesso!');
+                // location.reload();
+                // $(".progress").hide();
+                // $(".progress-bar").css("width", "0%").text("0 %");
             });
         });
     </script>
