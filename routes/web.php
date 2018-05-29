@@ -27,8 +27,8 @@ Route::prefix('admin/acoes')->group(function () {
     // Route::get('/historico-cotacoes', 'StockHistoryController@index')->name('stock-history.index');
     Route::get('/historico-cotacoes/{ticker}', 'StockHistoryController@show')->name('stock-history.show');
     // Route::get('/atualizar-historico/{ticker}', 'StockController@updateHistory')->name('stock.updateHistory');
-    Route::post('/atualizar-historico/{ticker}', 'StockHistoryController@update')->name('stock-history.update');
-    Route::get('/atualizar-historico-em-massa/', 'StockHistoryController@updateEmMassa')->name('stock-history.updateEmMassa');
+    Route::post('/atualizar-historico/{ticker}', 'StockHistoryController@atualizar')->name('stock-history.update');
+    Route::post('/atualizar-historico-em-massa/', 'StockHistoryController@atualizarEmMassa')->name('stock-history.updateEmMassa');
 
     Route::get('/historico-cotacao/{acao}','GraficoController@historicoCotacao')->name('grafico.historico-cotacao');
 });

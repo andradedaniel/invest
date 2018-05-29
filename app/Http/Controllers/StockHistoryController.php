@@ -25,17 +25,19 @@ class StockHistoryController extends Controller
     }
 
 
-    public function updateEmMassa($beginDate, $ticker)
+    public function atualizarEmMassa(Request $request)
     {
         //$beginDate = $request->beginDate;
         
         $response = array(
             'status' => 'success',
-            'msg' => $ticker.' Setting created successfully '.$beginDate,
+            'msg' => $request->ticker.' Setting created successfully '.$request->beginDate,
         );
         return \Response::json($response);
    
     }
+
+    public function atualizar(Request $request,$ticker)
 
 
     public function update(Request $request,$ticker)

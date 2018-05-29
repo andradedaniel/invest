@@ -76,7 +76,7 @@
                     <tbody>
                         <tr>
                             <th style="width: 20px">#</th>
-                            <th style="width: 20px"><input type="checkbox" name=""></th>
+                            <th style="width: 20px"><input type="checkbox" name="select_all_tickers"></th>
                             <th>Código</th>
                             <th>Histórico de Cotações</th>
                             <th>Última Atualização</th>
@@ -126,16 +126,27 @@
 @section('js')
     <script type="text/javascript">
         $(document).ready(function() {
+            $('input[name="select_all_tickers"]').click(function () {
+                $('input[name="ticker"]').prop('checked', $(this).prop('checked'));
+            });
+
             $('#beginDateSubmit').on('click', function (e) {
                 e.preventDefault();
+                var _token = $("input[name='_token']").val(); // get csrf field.
                 var beginDate = $("input[name=beginDate]").val();
-                // alert(beginDate);
-                // var title = $('#title').val();
+                var selected_tickers = $('input[name="ticker"]:checked').map(function() {
+                                            return this.value;
+                                        }).get();
+
+                selected_tickers.forEach(function(valor, chave){
+                    console.log(chave, valor);
+                });
+
                 var ticker = 'VULC3'
                 $.ajax({
-                    type: "GET",
-                    url: "{{ route('stock-history.updateEmMassa') }}/",
-                    data: {beginDate: beginDate, ticker: ticker},
+                    type: "POST",
+                    url: "{{ route('stock-history.updateEmMassa') }}",
+                    data: {_token:_token, beginDate: beginDate, ticker: ticker},
                     success: function( msg ) {
                         console.log(msg);
                     }
