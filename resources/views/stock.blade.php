@@ -43,8 +43,8 @@
                 </div>
                 <!-- /.form group --> 
             </div>
-            <div class="progress" style="display: none;">
-                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress" style="display:none;">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             {{-- <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -145,22 +145,22 @@
                 var delay = 0;
                 selected_tickers.forEach(function(valor, indice){
                     // console.log(percent, valor);
-                    // setTimeout(function(){
+                    setTimeout(function(){
                         var percent = ((indice+1)/selected_tickers.length)*100;
-                       $(".progress-bar").css("width", percent + "%").text(indice+1 + " / " + selected_tickers.length);
                         $.ajax({
                             type: "POST",
                             async: false,
                             url: "{{ route('stock-history.updateEmMassa') }}",
                             data: {_token:_token, beginDate: beginDate, ticker: valor},
                             success: function( retorno ) {
+                                $(".progress-bar").css("width", percent + "%").text(indice+1 + " / " + selected_tickers.length);
                                 console.log(retorno.msg);
                             }
                         });
-                    // },delay++*500);    
+                    },delay++*2000);    
                 });
-                $('#modal-date-updateall').modal('toggle');
-                alert('Histórico de Cotações importadas com sucesso!');
+                // $('#modal-date-updateall').modal('toggle');
+                // alert('Histórico de Cotações importadas com sucesso!');
                 // location.reload();
                 // $(".progress").hide();
                 // $(".progress-bar").css("width", "0%").text("0 %");

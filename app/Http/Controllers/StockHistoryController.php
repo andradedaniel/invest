@@ -60,8 +60,10 @@ class StockHistoryController extends Controller
     public function atualizarEmMassa(Request $request)
     {
         //$beginDate = $request->beginDate;
-        usleep(500000);
+        // usleep(1000000);
+        // sleep(2);
         if ($this->update($request->beginDate,$request->ticker))
+        // if (true)
         {
             $response = array(
                 'status' => 'success',
