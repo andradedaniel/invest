@@ -115,6 +115,11 @@ return [
             'icon' => 'dashboard',
         ],
         [
+            'text' => 'Carteira',
+            'url'  => 'carteira',
+            'icon' => 'apple',
+        ],
+        [
             'text' => 'Ações',
             'url'  => 'acoes',
             'icon' => 'list-alt',
