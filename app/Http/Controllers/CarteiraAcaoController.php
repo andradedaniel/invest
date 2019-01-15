@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\CarteiraAcao;
+use App\Stock;
 use Illuminate\Support\Facades\DB;
 
 class CarteiraAcaoController extends Controller
@@ -28,5 +29,14 @@ class CarteiraAcaoController extends Controller
         // $stocks = Stock::paginate(10);
         // $stocksCount = Stock::count();
         return view('carteira')->with(compact('operacoes'));
+    }
+
+    public function novaOperacao()
+    {
+         $stocks = Stock::all(['ticker'])->toArray();
+         
+        //  dd($stocks);
+        // $stocksCount = Stock::count();
+        return view('carteira-nova-operacao')->with(compact('stocks'));
     }
 }

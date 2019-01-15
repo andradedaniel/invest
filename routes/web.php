@@ -20,7 +20,9 @@ Auth::routes();
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');
 Route::get('/acoes', 'CarteiraAcaoController@index')->name('carteira-acao.index');
 Route::get('/acoes/comprar', 'CarteiraAcaoController@comprar')->name('carteira-acao.comprar');
-Route::get('/carteira', 'CarteiraAcaoController@carteira')->name('carteira-acao.carteira');
+
+Route::get('/carteira', 'CarteiraAcaoController@carteira')->name('carteira.carteira');
+Route::get('/carteira/nova', 'CarteiraAcaoController@novaOperacao')->name('carteira.nova-operacao');
 
 
 Route::prefix('admin/acoes')->group(function () { 

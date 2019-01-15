@@ -10,7 +10,7 @@
 @section('content')
 <div class="box-header">
     <h3 class="box-title pull-right">
-        <a href="" onclick="alert('Funcionalidade ainda nao implementada!!');" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Nova Operação</a>
+        <a href="{{ route('carteira.nova-operacao') }}" title="Cadastrar operação de compra de ação" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Nova Operação</a>
         {{-- <a href="" onclick="alert('Funcionalidade ainda nao implementada!!');" class="btn btn-primary"><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Importar Historico</a> --}}
         {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-date-updateall"><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Importar Historico</button> --}}
     </h3>
