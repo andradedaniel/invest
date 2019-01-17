@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\CarteiraAcao;
 use App\Stock;
 use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Request;
 
 class CarteiraAcaoController extends Controller
 {
@@ -38,5 +39,10 @@ class CarteiraAcaoController extends Controller
         //  dd($stocks);
         // $stocksCount = Stock::count();
         return view('carteira-nova-operacao')->with(compact('stocks'));
+    }
+
+    public function novaOperacaoSave(Request $request)
+    {
+         dd($request);
     }
 }

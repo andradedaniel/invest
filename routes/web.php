@@ -23,6 +23,7 @@ Route::get('/acoes/comprar', 'CarteiraAcaoController@comprar')->name('carteira-a
 
 Route::get('/carteira', 'CarteiraAcaoController@carteira')->name('carteira.carteira');
 Route::get('/carteira/nova', 'CarteiraAcaoController@novaOperacao')->name('carteira.nova-operacao');
+Route::post('/carteira/nova', 'CarteiraAcaoController@novaOperacaoSave')->name('carteira.nova-operacao1');
 
 
 Route::prefix('admin/acoes')->group(function () { 
